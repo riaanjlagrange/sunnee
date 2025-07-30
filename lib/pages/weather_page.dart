@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sunnee/models/weather_model.dart';
+import 'package:sunnee/services/location_service.dart';
 import 'package:sunnee/services/weather_service.dart';
 
 const Color backgroundColor = Color(0xFF121212); // Very dark grey
@@ -13,7 +14,11 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final _weatherService = WeatherService('6630c8548801b96a1d78a9bee2e1aa3e');
+  final WeatherService _weatherService = WeatherService(
+    '6630c8548801b96a1d78a9bee2e1aa3e',
+  );
+  final LocationService _locationService = LocationService();
+
   Weather? _weather;
 
   Future<void> _fetchWeather() async {
@@ -21,7 +26,7 @@ class _WeatherPageState extends State<WeatherPage> {
     setState(() {
       _weather = null;
     });
-    String cityName = await _weatherService.getCurrentCity();
+    String cityName = await _locationService.getCurrentCity();
     try {
       final weather = await _weatherService.getWeather(cityName);
       setState(() {
